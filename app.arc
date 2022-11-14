@@ -1,6 +1,9 @@
 @app
 remix-grunge-stack-8cf5
 
+@aws
+runtime nodejs16.x
+
 @http
 /*
   method any
