@@ -2,6 +2,7 @@
 remix-grunge-stack-8cf5
 
 @aws
+region eu-west-3
 runtime nodejs16.x
 
 @http
