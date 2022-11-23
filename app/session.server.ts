@@ -42,7 +42,15 @@ export async function getUser(request: Request) {
   throw await logout(request);
 }
 
-export async function requireUserId(
+export async function requireUserIdOr401(request: Request) {
+  const userId = await getUserId(request);
+  if (!userId) {
+    throw new Response(undefined, { status: 401 });
+  }
+  return userId;
+}
+
+export async function requireUserIdOrRedirect(
   request: Request,
   redirectTo: string = new URL(request.url).pathname
 ) {
@@ -55,7 +63,7 @@ export async function requireUserId(
 }
 
 export async function requireUser(request: Request) {
-  const userId = await requireUserId(request);
+  const userId = await requireUserIdOrRedirect(request);
 
   const user = await getUserById(userId);
   if (user) return user;

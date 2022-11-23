@@ -5,14 +5,14 @@ import invariant from "tiny-invariant";
 
 import { deleteNote } from "~/models/note.server";
 import { getNote } from "~/models/note.server";
-import { requireUserId } from "~/session.server";
+import { requireUserIdOrRedirect } from "~/session.server";
 
 type LoaderData = {
   note: NonNullable<Awaited<ReturnType<typeof getNote>>>;
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
-  const userId = await requireUserId(request);
+  const userId = await requireUserIdOrRedirect(request);
   invariant(params.noteId, "noteId not found");
 
   const note = await getNote({ userId, id: params.noteId });
@@ -23,7 +23,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
-  const userId = await requireUserId(request);
+  const userId = await requireUserIdOrRedirect(request);
   invariant(params.noteId, "noteId not found");
 
   await deleteNote({ userId, id: params.noteId });
@@ -37,7 +37,7 @@ export default function NoteDetailsPage() {
   return (
     <div>
       <h3 className="text-2xl font-bold">{data.note.title}</h3>
-      <p className="py-6 whitespace-pre-wrap">{data.note.body}</p>
+      <p className="whitespace-pre-wrap py-6">{data.note.body}</p>
       <hr className="my-4" />
       <Form method="post">
         <button
